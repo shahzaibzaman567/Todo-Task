@@ -14,11 +14,3 @@ A professional, full-stack task management application designed to help users or
 - **Database:** MongoDB / PostgreSQL
 - **Authentication:** JSON Web Tokens (JWT) & Bcrypt
 
-## 📦 Installation & Setup
-
-Follow these steps to run the project locally:
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com
-   cd your-repo-name
