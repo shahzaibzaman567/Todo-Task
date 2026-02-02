@@ -8,9 +8,9 @@ A professional, full-stack task management application designed to help users or
 - **Responsive Design:** Optimized for mobile, tablet, and desktop views.
 - **Real-time Updates:** Instant feedback on task changes.
 
-## 🛠️ Tech Stack
-- **Frontend:** React.js / Next.js (Tailwind CSS for styling)
+## 🛠️ Full Stack
+- **Frontend:** React.js 
 - **Backend:** Node.js & Express.js
-- **Database:** MongoDB / PostgreSQL
+- **Database:** MongoDB
 - **Authentication:** JSON Web Tokens (JWT) & Bcrypt
 
