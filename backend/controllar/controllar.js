@@ -2,6 +2,7 @@ import { UserModel } from "../models/User.js";
 import { TaskModel } from "../models/Task.js";
 import jwt from "jsonwebtoken";
 
+//For Login Route
 export let Login = (req, res) => {
   const { email, password } = req.body;
 
@@ -9,21 +10,20 @@ export let Login = (req, res) => {
     .then((user) => {
       if (user) {
         if (user.password === password) {
-          return res.json("success");
+          // Token generate
+          const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+          );
+          return res.json({message:"success",token:token,username:user.name});
         } else {
           return res.status(401).json("password is incorrect");
         }
       } else {
-        res.json("email not register");
+       return res.status(401).json({ message: "email not register" });
       }
-      // Token generate
-      const token = jwt.sign(
-        { id: user._id, email: user.email },
-        process.env.JWT_SECRET,
-      );
-
-      res.json({ token }); // kick token for fronted
     })
+
     .catch((err) => res.status(500).json({ error: err.message }));
 };
 
