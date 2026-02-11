@@ -1,91 +1,64 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import "./Update.css"; 
 
 export default function UpdateTask() {
   const { id } = useParams();
-  const [name, setName] = useState("");
   const [task, setTask] = useState("");
   const token = localStorage.getItem("token");
-  const userName = localStorage.getItem("user")
+  const userName = localStorage.getItem("user");
+  const API = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/getTask/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      .get(`${API}/getTask/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((result) => {
-        console.log(result);
-        setName(result.data.name);
         setTask(result.data.task);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [id, API, token]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:4000/updateTask/${id}`, { name, task }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-  })
-      .then((result) => {
+      .put(`${API}/updateTask/${id}`, { task }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(() => {
         navigate(`/user/${userName}`);
       })
       .catch((err) => console.log(err));
   };
 
   return (
-    <div className="container min-vh-100 d-flex justify-content-center align-items-center">
-      <div
-        className="bg-white rounded-4 shadow p-4 p-md-5 w-100"
-        style={{ maxWidth: "500px" }}
-      >
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <Link to="/user" className="btn border-dark">
-            Back
+    <div className="update-container">
+      <div className="glass-update-card">
+        <div className="update-header">
+          <Link to={`/user/${userName}`} className="back-link">
+            ← Back
           </Link>
-          <h3 className="text-center fw-bold m-0 d-block">Update User</h3>
-          {/* <div style={{ width: "75px" }}>spacer to center heading</div> */}
+          <h2 className="update-title">Edit Task</h2>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label fw-semibold">
-              Name
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="name"
-              name="name"
-              value={name}
-              placeholder="Enter name"
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="task" className="form-label fw-semibold">
-              Task
-            </label>
+        <form onSubmit={handleSubmit} className="update-form">
+          <div className="input-box">
+            <label className="input-label">Task Description</label>
             <textarea
-              className="form-control"
-              id="task"
-              name="task"
-              placeholder="Enter task details"
-              rows="3"
+              className="update-textarea"
+              rows="5"
+              placeholder="What needs to be changed?"
               value={task}
+              required
               onChange={(e) => setTask(e.target.value)}
             ></textarea>
           </div>
 
-          <button type="submit" className="btn btn-primary w-100 mt-3">
-            Update
+          <button type="submit" className="update-btn">
+            Save Changes
           </button>
         </form>
       </div>

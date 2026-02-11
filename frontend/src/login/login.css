@@ -1,0 +1,110 @@
+/* Container with Dark Tech Background */
+.auth-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+              url('https://images.unsplash.com');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Glassmorphism Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 162, 255, 0.2);
+  border-radius: 20px;
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.8s ease-out;
+}
+
+.auth-title {
+  color: #00d4ff; /* Electric Blue */
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.auth-subtitle {
+  color: #888;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+}
+
+/* Input Styling */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #222;
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #00d4ff;
+  background: rgba(0, 162, 255, 0.05);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+/* Glow Button */
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(45deg, #005c97, #00d2ff);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+}
+
+.auth-footer {
+  margin-top: 25px;
+  text-align: center;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.auth-link {
+  color: #00d4ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Page Entrance Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

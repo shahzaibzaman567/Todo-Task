@@ -1,107 +1,97 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import CreateTask from "./createTask";
+import "./Dashboard.css"; 
 
 export default function User() {
   const { username } = useParams();
   const [users, setUser] = useState([]);
+  const [task, setTask] = useState("");
   const token = localStorage.getItem("token");
-  const [task,setTask] = useState("") 
+  const API = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
+  // Fetch Tasks
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/getTasks", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((result) => {
-        setUser(result.data);
-      })
-      .catch((err) => console.log(err));
+    fetchTasks();
   }, []);
 
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:4000/deleteTask/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const fetchTasks = () => {
+    axios.get(`${API}/getTasks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((result) => setUser(result.data))
+    .catch((err) => console.log(err));
   };
 
+  const handleDelete = (id) => {
+    axios.delete(`${API}/deleteTask/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then(() => fetchTasks()) // Refresh list without reloading page
+    .catch((err) => console.log(err));
+  };
 
-  function Handler(){
-      e.preventDefault();
-CreateTask(task)
-  }
+  const CreateTask = (e) => {
+    e.preventDefault();
+    axios.post(`${API}/createTask`, { task }, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(() => {
+      setTask(""); // Clear input
+      fetchTasks(); // Refresh list
+    })
+    .catch((err) => console.log(err));
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   return (
-    <div className="container-fluid min-vh-100  d-flex justify-content-center align-items-center px-2">
-      <div
-        className="bg-white rounded-4   shadow w-100 p-3 p-md-4 "
-        style={{ maxWidth: "900px" }}
-      >
-        <h4 className="text-center mb-3 fw-bold mb-2">User List</h4>
-        <form>
-          <div class="input-group flex-nowrap">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Add Task"
-              aria-label="Username"
-              aria-describedby="addon-wrapping"
-              value={task}
-              onChange={(e)=>{setTask(e.target.value)}}
-            />
-            <button class="btn btn-primary" type="submit" id="addon-wrapping">
-              Add+
-            </button>
-          </div>
+    <div className="dashboard-container">
+      <div className="glass-panel">
+        <div className="dashboard-header">
+          <h2>Welcome, <span className="highlight">{username}</span></h2>
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
+        </div>
+
+        <form className="task-form" onSubmit={CreateTask}>
+          <input
+            type="text"
+            className="task-input"
+            placeholder="What needs to be done?"
+            value={task}
+            required
+            onChange={(e) => setTask(e.target.value)}
+          />
+          <button type="submit" className="add-btn">Add Task</button>
         </form>
 
-        {/* Responsive Table Wrapper */}
-        <div className="table-responsive ">
-          <table className="table table-hover align-middle mb-0">
-            <thead className="table-light">
+        <div className="task-list-wrapper">
+          <table className="custom-table">
+            <thead>
               <tr>
-                <th>Name</th>
-                <th>Task</th>
-                <th className="text-center">Action</th>
+                <th>User</th>
+                <th>Task Description</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
-
             <tbody>
-              {users.map((user) => {
-                return (
-                  <tr key={user._id}>
-                    <td>{user.name}</td>
-                    <td>{user.task}</td>
-                    <td className="text-center">
-                      <Link
-                        to={`/update/${user._id}`}
-                        className="btn btn-sm btn-primary me-2"
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={(e) => handleDelete(user._id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {users.map((user) => (
+                <tr key={user._id} className="task-row">
+                  <td><div className="user-badge">{username[0]}</div></td>
+                  <td className="task-text">{user.task}</td>
+                  <td className="text-right">
+                    <Link to={`/update/${user._id}`} className="edit-link">Edit</Link>
+                    <button onClick={() => handleDelete(user._id)} className="delete-link">Delete</button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+          {users.length === 0 && <p className="empty-msg">No tasks found. Add one above!</p>}
         </div>
       </div>
     </div>

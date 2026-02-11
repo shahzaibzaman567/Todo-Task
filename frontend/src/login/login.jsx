@@ -1,108 +1,72 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./login.css"; // We'll use one CSS file for both to keep it clean
 
 export default function Login() {
   const [email, setEmail] = useState("");
-  const  [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const [err,setErr] = useState("")
+  const [err, setErr] = useState("");
+  const API = import.meta.env.VITE_API_URL;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   
-   
     axios
-      .post("http://localhost:4000/login",
-         { email, password },
-       )
+      .post(`${API}/login`, { email, password })
       .then((result) => {
         if (result.data.message === "success") {
-          const token=result.data.token;
-           const userName = result.data.username;
-        localStorage.setItem("user",userName)
-          localStorage.setItem("token", result.data.token)
-          navigate(`/${userName}`);
+          const userName = result.data.username;
+          localStorage.setItem("user", userName);
+          localStorage.setItem("token", result.data.token);
+          navigate(`/user/${userName}`);
         }
       })
       .catch((err) => {
-       if(err){
-        return setErr("Invalid email or password. Please check your credentials and try again.")
-       }
-      
+        setErr("Invalid email or password. Please check your credentials.");
       });
   };
 
-
-
-
-
-
   return (
-    <>
-      <div
-        style={{ height: "88vh", width: "82vw" }}
-        className="d-flex align-items-center justify-content-center "
-      >
-        <form className="col-5 card border-primary" onSubmit={handleSubmit}>
-          <h1>Login</h1>
+    <div className="auth-container">
+      <div className="glass-card">
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <h1 className="auth-title">Welcome Back</h1>
+          <p className="auth-subtitle">Please enter your details to login</p>
 
-          <div className="mb-3">
-            <b>
-              
-              <label
-                htmlFor="exampleInputEmail1"
-                className="form-label d-block text-start "
-              >
-                Email address :
-              </label>
-            </b>
+          <div className="input-group">
             <input
               type="email"
-              className="form-control is-vaild"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
+              placeholder="Email Address"
               value={email}
               required
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
-          <div className="mb-3">
-            <b>
-            
-              <label
-                htmlFor="exampleInputPassword1"
-                className="form-label d-block text-start"
-              >
-                Password :
-              </label>
-            </b>
+          <div className="input-group">
             <input
               type="password"
-              className="form-control is-vaild"
-              id="exampleInputPassword1"
-                value={password}
-                minLength={6}
+              placeholder="Password"
+              value={password}
+              minLength={6}
               required
               onChange={(e) => setPassword(e.target.value)}
             />
-         
           </div>
-<p className="text-danger">{err}</p>
-          <button type="submit" className="btn btn-primary w-100 mb-3">
-            Login
+
+          {err && <p className="error-message">{err}</p>}
+
+          <button type="submit" className="auth-btn">
+            Login Now
           </button>
-          <Link
-            to={"/registration"}
-            type="submit"
-            className="btn btn-primary w-100 mb-2"
-          >
-            Signup
-          </Link>
+
+          <div className="auth-footer">
+            <span>Don't have an account? </span>
+            <Link to="/registration" className="auth-link">Sign up</Link>
+          </div>
         </form>
       </div>
-    </>
+    </div>
   );
 }

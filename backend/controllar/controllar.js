@@ -43,11 +43,12 @@ export const Register = async (req, res) => {
 };
 
 export const CreateTask = async (req, res) => {
-  const { name, task } = req.body;
-  if (!name || !task) return res.status(400).json("Please fill all fields");
+  const {task} = req.body;
+  if (!task) return res.status(400).json("Please fill all fields");
 
   try {
-    const newTask = await TaskModel.create(req.body);
+    const newTask = await TaskModel.create({task , userId : req.user.id});
+    console.log(newTask)
     res.status(201).json(newTask);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -56,7 +57,7 @@ export const CreateTask = async (req, res) => {
 
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await TaskModel.find();
+    const tasks = await TaskModel.find({userId : req.user.id});
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
