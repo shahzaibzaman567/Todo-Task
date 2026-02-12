@@ -16,15 +16,13 @@ async function connectToMongoDB() {
 try{
  await mongoose
 .connect(process.env.MY_DB_USER)
-.then(() => {
-  console.log("DB conected")
+ console.log("✅ DB Connected Successfully");
  isConnected=true
-})
-// .catch((e)=>console.log(e))
 }catch(err){
 console.log(err)
   }
 }
+connectToMongoDB()
 
 app.use(cors({
   origin: "http://localhost:5173",
@@ -39,17 +37,11 @@ app.use((req,res,next)=>{
 });
 
 
-app.use((req,res,next)=> {
-if(!isConnected){
-  connectToMongoDB()
-}
-next()
-})
 
   
-// app.listen(process.env.PORT, () => {
-//   console.log(`server is running on port ${process.env.PORT} `);
-// });
+app.listen(process.env.PORT, () => {
+  console.log(`server is running on port ${process.env.PORT} `);
+});
 
 //do not use app.listen in vercel
 export default app
