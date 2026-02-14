@@ -40,7 +40,7 @@ export default function Signup() {
             <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} minLength={6} required />
           </div>
 
-          {err && <p className="error-text">{err}</p>}
+          {err && <h6 className="text-danger">{err}</h6>}
 
           <button type="submit" className="main-btn">Sign Up</button>
           

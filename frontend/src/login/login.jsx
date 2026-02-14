@@ -55,7 +55,7 @@ export default function Login() {
             />
           </div>
 
-          {err && <h2 className="error-message">{err}</h2>}
+          {err && <h6 className="text-danger">{err}</h6>}
 
           <button type="submit" className="auth-btn">
             Login Now
