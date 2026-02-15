@@ -20,7 +20,7 @@ function App() {
         <Route path='/Login' element={<Login/>}  />
         <Route path='/update/:id' element={<Protect Component={UpdateTask}/>}  />
         {/* <Route path='/create' element={<Protect Component={CreateTask}/>}  /> */}
-        <Route path='/user/:username' element={<Protect Component={User}/>}  />
+        <Route path='/dashboard' element={<Protect Component={User}/>}  />
 
       </Routes>
       </BrowserRouter>

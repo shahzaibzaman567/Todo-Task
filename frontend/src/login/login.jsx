@@ -19,7 +19,7 @@ export default function Login() {
           const userName = result.data.username;
           localStorage.setItem("user", userName);
           localStorage.setItem("token", result.data.token);
-          navigate(`/user/${userName}`);
+          navigate(`/dashboard`);
         }
       })
       .catch((err) => {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Dashboard.css"; 
+import "./dashboard.css"; 
 
 export default function User() {
-  const { username } = useParams();
   const [users, setUser] = useState([]);
+  let username = localStorage.getItem("user")
   const [task, setTask] = useState("");
   const token = localStorage.getItem("token");
   const API = import.meta.env.VITE_API_URL;

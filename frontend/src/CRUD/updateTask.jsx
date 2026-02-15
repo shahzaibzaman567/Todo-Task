@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import "./Update.css"; 
+import "./update.css"; 
 
 export default function UpdateTask() {
   const { id } = useParams();
@@ -29,7 +29,7 @@ export default function UpdateTask() {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(() => {
-        navigate(`/user/${userName}`);
+        navigate(`/dashboard`);
       })
       .catch((err) => console.log(err));
   };
@@ -41,7 +41,7 @@ export default function UpdateTask() {
           <Link to={`/user/${userName}`} className="back-link">
             ← Back
           </Link>
-          <h2 className="update-title">Edit Task</h2>
+          <h2  className="update-title">Edit Task</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="update-form">
