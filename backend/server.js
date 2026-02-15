@@ -14,8 +14,7 @@ let isConnected=false;
 
 async function connectToMongoDB() {
 try{
- await
-  mongoose
+ await  mongoose
 .connect(process.env.MY_DB_USER)
 console.log("✅ DB Connected Successfully")
  console.log();
