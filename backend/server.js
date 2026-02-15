@@ -4,7 +4,6 @@ import cors from "cors";
 import { UserModel } from "./models/User.js";
 import dotenv from "dotenv"
 import { router } from "./routes/route.js";
-
 dotenv.config();
 
 let app = express();
@@ -14,10 +13,9 @@ let isConnected=false;
 
 async function connectToMongoDB() {
 try{
- await  mongoose
+ mongoose
 .connect(process.env.MY_DB_USER)
 console.log("✅ DB Connected Successfully")
- console.log();
  isConnected=true
 }catch(err){
 console.log(err)
@@ -40,9 +38,9 @@ app.use((req,res,next)=>{
 
 
   
-app.listen(process.env.PORT, () => {
-  console.log(`server is running on port ${process.env.PORT} `);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log(`server is running on port ${process.env.PORT} `);
+// });
 
 //do not use app.listen in vercel
 export default app
