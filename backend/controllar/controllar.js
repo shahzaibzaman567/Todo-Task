@@ -6,54 +6,29 @@ import bcrypt from "bcrypt";
 //For Login Route
 export let Login = async (req, res) => {
   const { email, password } = req.body;
-  if(!email || !password){
-    return res.status(400).json("All field required")
+  if (!email || !password) {
+    return res.status(400).json("All field required");
   }
 
-  try{
-  const user = await UserModel.findOne({email:email});
-  if(!user) res.status(404).json({ message: "email not register" })
-   const isMatch= await bcrypt.compare(password,user.password)
-  if(!isMatch) res.status(401).json({message:"password is wrong"})
- const token = jwt.sign(
-            { id: user._id, email: user.email },
-            process.env.JWT_SECRET,
-          );
+  try {
+    const user = await UserModel.findOne({ email: email });
+    if (!user) res.status(404).json({ message: "email not register" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) res.status(401).json({ message: "password is wrong" });
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+    );
 
-          console.log(user.name)
- return res.json({
-            message: "success",
-            token: token,
-            username: user.name,
-          });
-  }catch (err){
-res.json({message:err.message})
-}
-
-  // UserModel.findOne({ email: email })
-  // .then((user) => {
-      // const user = awa
-      // if (user) {
-      //   if (user.password === password) {
-      //     // Token generate
-      //     const token = jwt.sign(
-      //       { id: user._id, email: user.email },
-      //       process.env.JWT_SECRET,
-      //     );
-      //     return res.json({
-      //       message: "success",
-      //       token: token,
-      //       username: user.name,
-      //     });
-      //   } else {
-      //     return res.status(401).json("password is incorrect");
-      //   }
-      // } else {
-      //   return res.status(401).json({ message: "email not register" });
-      // }
-    // })
-
-    // .catch((err) => res.status(500).json({ error: err.message }));
+    console.log(user.name);
+    return res.json({
+      message: "success",
+      token: token,
+      username: user.name,
+    });
+  } catch (err) {
+    res.json({ message: err.message });
+  }
 };
 
 export const Register = async (req, res) => {
@@ -113,7 +88,7 @@ export const updateTask = async (req, res) => {
   const id = req.params.id;
 
   try {
- await   TaskModel.findByIdAndUpdate(
+    await TaskModel.findByIdAndUpdate(
       { _id: id },
       { name: req.body.name, task: req.body.task },
     )

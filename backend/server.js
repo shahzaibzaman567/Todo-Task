@@ -12,7 +12,7 @@ let isConnected=false;
 
 async function connectToMongoDB() {
 try{
-await mongoose
+ mongoose
 .connect(process.env.MY_DB_USER)
 console.log("✅ DB Connected Successfully")
  isConnected=true
