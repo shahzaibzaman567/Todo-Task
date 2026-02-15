@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import { UserModel } from "./models/User.js";
 import dotenv from "dotenv"
 import { router } from "./routes/route.js";
 dotenv.config();
@@ -13,7 +12,7 @@ let isConnected=false;
 
 async function connectToMongoDB() {
 try{
- mongoose
+await mongoose
 .connect(process.env.MY_DB_USER)
 console.log("✅ DB Connected Successfully")
  isConnected=true
