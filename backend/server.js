@@ -40,9 +40,9 @@ app.use((req,res,next)=>{
 
 
   
-app.listen(process.env.PORT, () => {
-  console.log(`server is running on port ${process.env.PORT} `);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log(`server is running on port ${process.env.PORT} `);
+// });
 
 //do not use app.listen in vercel
 export default app

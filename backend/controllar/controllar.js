@@ -124,5 +124,6 @@ export let uploadimage = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send(err.message || "intenal server err");
+    
   }
 };

@@ -92,7 +92,11 @@ export default function User() {
         setUrl(res.data);
         setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>{
+         console.log(err)
+        setLoading(false);
+
+        });
   };
 
   return (
