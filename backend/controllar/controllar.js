@@ -2,6 +2,7 @@ import { UserModel } from "../models/User.js";
 import { TaskModel } from "../models/Task.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import uploadImage from "../uploadimage.js";
 
 //For Login Route
 export let Login = async (req, res) => {
@@ -12,15 +13,14 @@ export let Login = async (req, res) => {
 
   try {
     const user = await UserModel.findOne({ email: email });
-    if (!user) res.status(404).json({ message: "email not register" });
+    if (!user) return res.status(404).json({ message: "email not register" });
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) res.status(401).json({ message: "password is wrong" });
+    if (!isMatch) return res.status(401).json({ message: "password is wrong" });
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
     );
 
-    console.log(user.name);
     return res.json({
       message: "success",
       token: token,
@@ -112,5 +112,17 @@ export const deleteTask = async (req, res) => {
       .catch((err) => res.json(err));
   } catch (err) {
     res.json({ error: err.message });
+  }
+};
+
+export let uploadimage = async (req, res) => {
+  try {
+    const { image } = req.body;
+    if (!image) return res.status(400).send("No image data provided");
+    const url = await uploadImage(image);
+    res.status(200).json(url);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message || "intenal server err");
   }
 };

@@ -4,7 +4,7 @@ import {Routes,Route,BrowserRouter} from "react-router-dom"
 import Signup from './signup/signup.jsx'
 import Login from './login/login.jsx'
 // import CreateTask from './CRUD/createTask.jsx'
-import User from './CRUD/user.jsx'
+import User from './dashboard/dashboard.jsx'
 import UpdateTask from "./CRUD/updateTask.jsx"
 import Protect from './Protect/protectFile.jsx'
 

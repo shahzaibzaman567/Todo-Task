@@ -38,7 +38,7 @@ export default function UpdateTask() {
     <div className="update-container">
       <div className="glass-update-card">
         <div className="update-header">
-          <Link to={`/user/${userName}`} className="back-link">
+          <Link to={`/dashboard`} className="back-link">
             ← Back
           </Link>
           <h2  className="update-title">Edit Task</h2>
