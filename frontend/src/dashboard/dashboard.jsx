@@ -25,7 +25,6 @@ export default function User() {
       })
       .then((result) => setUser(result.data))
       .catch((err) => console.log(err));
-
   };
 
   const handleDelete = (id) => {
@@ -92,11 +91,10 @@ export default function User() {
         setUrl(res.data);
         setLoading(false);
       })
-      .catch((err) =>{
-         console.log(err)
+      .catch((err) => {
+        console.log(err);
         setLoading(false);
-
-        });
+      });
   };
 
   return (

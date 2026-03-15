@@ -3,6 +3,7 @@ import { TaskModel } from "../models/Task.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import uploadImage from "../uploadimage.js";
+import redisClient from "../config/redis.js";
 
 //For Login Route
 export let Login = async (req, res) => {
@@ -57,7 +58,7 @@ export const CreateTask = async (req, res) => {
 
   try {
     const newTask = await TaskModel.create({ task, userId: req.user.id });
-    console.log(newTask);
+     await redisClient.del(`tasks:${req.user.id}`)
     res.status(201).json(newTask);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -66,7 +67,17 @@ export const CreateTask = async (req, res) => {
 
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await TaskModel.find({ userId: req.user.id });
+    const userId = req.user.id;
+    const cachedTasks = await redisClient.get(`tasks:${userId}`);
+
+    if (cachedTasks) {
+      console.log("Tasks from Redis ⚡");
+      return res.json(JSON.parse(cachedTasks));
+    }
+
+const tasks = await TaskModel.find({ userId });
+    await redisClient.set(`tasks:${userId}`, JSON.stringify(tasks), { EX: 60 })
+
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -77,8 +88,24 @@ export const getTaskbyId = async (req, res) => {
   const id = req.params.id;
 
   try {
+    const cachedTask = await redisClient.get(`task:${id}`);
+   
+    if (cachedTask) {
+      console.log("Single Task from Redis ⚡");
+      return res.json(JSON.parse(cachedTask));
+    }
+
     const Task = await TaskModel.findById({ _id: id });
+    if (!Task) return res.status(404).json({ message: "Not found" });
+     await redisClient.set(
+
+      `task:${id}`,
+      JSON.stringify(task),
+      { EX: 60 }
+    );
+  
     res.json(Task);
+
   } catch (err) {
     res.json({ error: err.message });
   }
@@ -90,12 +117,13 @@ export const updateTask = async (req, res) => {
   try {
     await TaskModel.findByIdAndUpdate(
       { _id: id },
-      { name: req.body.name, task: req.body.task },
+      { task: req.body.task },
     )
       .then((result) => {
         res.json(result);
       })
-      .catch((err) => res.json(err));
+      await redisClient.del(`tasks:${req.user.id}`);
+await redisClient.del(`task:${id}`);
   } catch (err) {
     res.json({ error: err.message });
   }
@@ -109,10 +137,12 @@ export const deleteTask = async (req, res) => {
       .then((result) => {
         res.json(result);
       })
-      .catch((err) => res.json(err));
+await redisClient.del(`tasks:${req.user.id}`);
+await redisClient.del(`task:${id}`);
   } catch (err) {
     res.json({ error: err.message });
   }
+
 };
 
 export let uploadimage = async (req, res) => {
@@ -124,6 +154,5 @@ export let uploadimage = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send(err.message || "intenal server err");
-    
   }
 };
